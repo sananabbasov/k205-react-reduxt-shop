@@ -1,18 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loginUserAction } from '../../redux/Actions/UserAction'
-
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
-
+  const { userInfo } = useSelector((state) => state.user)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  const navigate = useNavigate()
   const dispach = useDispatch()
 
   const loginHandler = () => {
-    dispach(loginUserAction(email,password))
+    dispach(loginUserAction(email, password))
+    
   }
+
+  console.log(userInfo.message);
+  useEffect(() => {
+  }, [navigate,userInfo])
+
+
+  if (userInfo.status === 200) {
+    navigate("/dashboard")
+  }
+
 
   return (
     <div className='container'>

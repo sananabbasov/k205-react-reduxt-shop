@@ -1,8 +1,7 @@
 import { BASE_URL } from "../../api/Config"
-import { LOGIN_USER } from "../Constants/UserConstants";
+import { LOGIN_USER, LOGOUT_USER } from "../Constants/UserConstants";
 
 export const loginUserAction = (email, password) => async (dispach, getState) => {
-
     var user = await fetch(`${BASE_URL}Auth/login`, {
         method: 'POST',
         headers:{
@@ -10,21 +9,23 @@ export const loginUserAction = (email, password) => async (dispach, getState) =>
         },
         body: JSON.stringify(
             {
-                Email: "admin@compar.az",
-                Password:"Sanan@123"
+                email: email,
+                password:password
             }
         )
     }).then(response => response.json())
-
-    console.log("UserAction",user);
-
     if (user.status === 200) {
-        
+        localStorage.setItem("userInfo",JSON.stringify(user.message))
     }
-
     dispach({
         type: LOGIN_USER,
         payload: user
     })
+}
 
+export const logoutUserAction = () => async (dispach, getState) =>{
+    localStorage.removeItem("userInfo");
+    dispach({
+        type: LOGOUT_USER,
+    })
 }

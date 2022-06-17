@@ -15,14 +15,15 @@ import AdbIcon from '@mui/icons-material/Adb';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
 import '../Header/header.scss'
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
+import { useDispatch,useSelector } from 'react-redux'
+import { logoutUserAction } from '../../redux/Actions/UserAction';
+import { useNavigate } from 'react-router-dom';
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const { userInfo } = useSelector((state) => state.user)
+  const navigate = useNavigate()
+  const dispach = useDispatch()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -37,6 +38,11 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const logOut = () =>{
+    dispach(logoutUserAction())
+    navigate("/")
+  }
 
   return (
     <div className='header-top'>
@@ -91,13 +97,13 @@ const Header = () => {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                
-                  <Link to="/">
-                    <MenuItem key={Math.random(10) * 100} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">Page</Typography>
-                    </MenuItem>
-                  </Link>
-              
+
+                <Link to="/">
+                  <MenuItem key={Math.random(10) * 100} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">Page</Typography>
+                  </MenuItem>
+                </Link>
+
               </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -120,53 +126,69 @@ const Header = () => {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-             
-                <Button
-                  key={Math.random(10) * 100}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  <Link to="/">Home</Link>
-                </Button>
-          
+
+              <Button
+                key={Math.random(10) * 100}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                <Link to="/">Home</Link>
+              </Button>
+
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-            
+
               <Link to="cart">
                 <AddShoppingCartIcon color='#fff' />
               </Link>
-              
-              <Link to="auth">
-                Login
-              </Link>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> 
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-               
-                  <MenuItem key={Math.random(10) * 100} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Product</Typography>
-                  </MenuItem>
-             
-              </Menu>
+
+
+              {
+
+                !userInfo.token ? (
+                  <Link to="auth">
+                    Login
+                  </Link>
+                ) :
+                  (
+                    <>
+                      <Tooltip title="Open settings">
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                        </IconButton>
+                      </Tooltip>
+                      <Menu
+                        sx={{ mt: '45px' }}
+                        id="menu-appbar"
+                        anchorEl={anchorElUser}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        open={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                      >
+                        <MenuItem onClick={handleCloseUserMenu}>
+                          <Typography textAlign="center">
+                            <button onClick={() => logOut()}>Logout</button>
+                          </Typography>
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  )
+              }
+
+
+
+
+
+
             </Box>
           </Toolbar>
         </Container>
