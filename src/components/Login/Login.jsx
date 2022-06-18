@@ -13,15 +13,12 @@ const Login = () => {
 
   const loginHandler = () => {
     dispach(loginUserAction(email, password))
-    
   }
-
-  console.log(userInfo.message);
   useEffect(() => {
-  }, [navigate,userInfo])
+  }, [navigate])
 
 
-  if (userInfo.status === 200) {
+  if (userInfo.length !== 0) {
     navigate("/dashboard")
   }
 

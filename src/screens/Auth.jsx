@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Login from '../components/Login/Login'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Dashboard from './Dashboard'
+import { getUserAction } from '../redux/Actions/UserAction'
 const Auth = () => {
-
   const {userInfo} = useSelector((state) => state.user)
-
-
-
+  const dispach = useDispatch()
+  useEffect(() => {
+    dispach(getUserAction())
+  },[dispach])
  
-console.log("test");
-
-  if (userInfo.token) {
+  if (userInfo.length !== 0) {
     return (
       <div>
           <Dashboard />

@@ -16,14 +16,26 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
 import '../Header/header.scss'
 import { useDispatch,useSelector } from 'react-redux'
-import { logoutUserAction } from '../../redux/Actions/UserAction';
+import { getUserAction, logoutUserAction } from '../../redux/Actions/UserAction';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+
   const { userInfo } = useSelector((state) => state.user)
   const navigate = useNavigate()
   const dispach = useDispatch()
+
+  const logOut = () =>{
+    dispach(logoutUserAction())
+    navigate("/")
+  }
+
+
+
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -39,10 +51,7 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const logOut = () =>{
-    dispach(logoutUserAction())
-    navigate("/")
-  }
+  
 
   return (
     <div className='header-top'>
@@ -146,7 +155,7 @@ const Header = () => {
 
               {
 
-                !userInfo.token ? (
+                userInfo.length === 0? (
                   <Link to="auth">
                     Login
                   </Link>

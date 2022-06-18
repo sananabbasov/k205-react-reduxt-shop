@@ -1,4 +1,4 @@
-import { LOGIN_USER, LOGOUT_USER } from "../Constants/UserConstants";
+import { GET_USER, LOGIN_USER, LOGOUT_USER } from "../Constants/UserConstants";
 
 export const UserReducer = (state = { userInfo: [] }, action) => {
     switch (action.type) {
@@ -12,6 +12,11 @@ export const UserReducer = (state = { userInfo: [] }, action) => {
             ...state,
             userInfo: []
         }
+        case GET_USER:
+            return{
+                ...state,
+                userInfo: action.payload
+            }
         default:
            return state
     }
