@@ -23,8 +23,10 @@ export const ChekOutAction = (userId) => async (dispach, getState) => {
             )
         }).then(res => res.json())
     }
+
+
     dispach({
         type: CHECK_OUT,
-        payload: data
+        payload: []
     })
 }

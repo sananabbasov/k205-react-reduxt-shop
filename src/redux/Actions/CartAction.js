@@ -30,5 +30,6 @@ export const removeAllCartAction = () => async (dispach, getState) =>{
     localStorage.removeItem("cartItems")
     dispach({
         type: REMOVE_ALL_CART,
+        payload: []
     })
 }

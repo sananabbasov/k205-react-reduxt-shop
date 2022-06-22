@@ -44,6 +44,7 @@ const Login = () => {
               </div>
               <div className='my-2'>
                 <button onClick={() => loginHandler()} className='btn btn-outline-success'>Daxil ol</button>
+                <button onClick={() => navigate("/register")} className='btn btn-outline-success'>Qeydiyyatdan kec</button>
               </div>
             </div>
           </div>
