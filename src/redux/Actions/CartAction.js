@@ -1,5 +1,5 @@
 import { BASE_URL } from "../../api/Config";
-import { ADD_TO_CART, GET_CART_ITEMS } from "../Constants/CartConstants"
+import { ADD_TO_CART, GET_CART_ITEMS, REMOVE_ALL_CART } from "../Constants/CartConstants"
 
 export const addToCartAction = (id,quantity=1) => async (dispach, getState) => {
     const data = await (await fetch(`${BASE_URL}Product/getbyid/${id}`)).json()
@@ -23,5 +23,12 @@ export const getCartItems = () => async (dispach, getState) => {
     dispach({
         type: GET_CART_ITEMS,
         payload: data
+    })
+}
+
+export const removeAllCartAction = () => async (dispach, getState) =>{
+    localStorage.removeItem("cartItems")
+    dispach({
+        type: REMOVE_ALL_CART,
     })
 }

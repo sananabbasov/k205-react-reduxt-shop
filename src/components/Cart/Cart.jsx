@@ -2,14 +2,67 @@ import { Button } from '@mui/material'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import { removeAllCartAction } from '../../redux/Actions/CartAction'
+import { ChekOutAction } from '../../redux/Actions/CheckOutAction'
+import { getUserAction } from '../../redux/Actions/UserAction'
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
 
     const { cartItems } = useSelector((state) => state.cart)
     const [totalPrice, setTotalPrice] = useState(0);
+    const dispach = useDispatch()
+    const {userInfo} = useSelector((state) => state.user)
+    const navigate = useNavigate()
+    console.log(userInfo);
 
+    useEffect(() => {
+        countTotal()
+        dispach(getUserAction())
+    }, [totalPrice])
+    const addOrder = () => {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Sifarişi tamamlamaq istədiyinizə əminsiniz?',
+            text: `Sifarişin ümumi məbləği ${totalPrice}. Sifariş tamamlanandan sonra səbətdəki məhsullar silinəcək.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sifarişi tamamla',
+            cancelButtonText: 'Ləğv et. ',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Sifariş tamamlandı.',
+                    'Zəhmət olmassa emailinizə baxın',
+                    'success'
+                )
+                    dispach(ChekOutAction(userInfo.id))
+                    dispach(removeAllCartAction())
+
+                // Bu hissədə add metodu işləyəcək
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Ləğv edildi.',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
+            }
+        })
+    }
 
     const countTotal = () => {
         var price = 0;
@@ -19,9 +72,7 @@ const Cart = () => {
         setTotalPrice(price)
     }
 
-    useEffect(() => {
-        countTotal()
-    }, [totalPrice])
+   
 
     return (
         <div>
@@ -58,11 +109,9 @@ const Cart = () => {
                                 <p>TotalPrice: {totalPrice}</p>
                             </div>
                             <div className="card-footer">
-                                <Link to="/">
-                                    <Button variant="contained">
-                                        Sifarisi tamamla
-                                    </Button>
-                                </Link>
+                                <Button onClick={() => addOrder()} variant="contained">
+                                    Sifarisi tamamla
+                                </Button>
                             </div>
                         </div>
                     </div>

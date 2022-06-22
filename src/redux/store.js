@@ -1,5 +1,6 @@
 import { applyMiddleware, combineReducers, createStore } from "@reduxjs/toolkit";
 import { CartReducer } from "./Reducers/CartReducer";
+import { addCheckOutReducer } from "./Reducers/CheckOutReducer";
 import { getProductsReducer } from "./Reducers/ProductReducer";
 import { UserReducer } from "./Reducers/UserReducer";
 
@@ -8,7 +9,8 @@ const {default: thunk} = require("redux-thunk")
 const reducer = combineReducers({
     products: getProductsReducer,
     cart: CartReducer,
-    user: UserReducer
+    user: UserReducer,
+    checkout: addCheckOutReducer,
 })
 
 
@@ -20,7 +22,8 @@ const userInfoFromLocalStorage = localStorage.getItem("userInfo")
 
 const initialState ={
     cart:{cartItems:cartItemFromLocalStorage},
-    user: {userInfo: userInfoFromLocalStorage}
+    user: {userInfo: userInfoFromLocalStorage},
+    checkout: {checkOut: []}
 }
 
 

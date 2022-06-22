@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
 import '../Header/header.scss'
-import { useDispatch,useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getUserAction, logoutUserAction } from '../../redux/Actions/UserAction';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -28,14 +28,14 @@ const Header = () => {
   const navigate = useNavigate()
   const dispach = useDispatch()
 
-  const logOut = () =>{
+  const logOut = () => {
     dispach(logoutUserAction())
     navigate("/")
   }
 
 
 
-  
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -51,7 +51,7 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  
+
 
   return (
     <div className='header-top'>
@@ -155,7 +155,7 @@ const Header = () => {
 
               {
 
-                userInfo.length === 0? (
+                userInfo.length === 0 ? (
                   <Link to="auth">
                     Login
                   </Link>
@@ -183,6 +183,13 @@ const Header = () => {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                       >
+                        
+                        <MenuItem onClick={handleCloseUserMenu}>
+                          <Typography textAlign="center">
+                            <Link to="dashboard">Dashboard</Link>
+                          </Typography>
+                        </MenuItem>
+
                         <MenuItem onClick={handleCloseUserMenu}>
                           <Typography textAlign="center">
                             <button onClick={() => logOut()}>Logout</button>
