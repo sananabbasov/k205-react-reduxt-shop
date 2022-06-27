@@ -1,60 +1,81 @@
-import { Step, StepButton, StepContent, StepLabel, Stepper } from '@mui/material'
+import { Alert, TextField } from '@mui/material'
 import React from 'react'
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 import { useState } from 'react'
+import Swal from 'sweetalert2';
+import { BASE_URL } from '../../api/Config';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const navigate = useNavigate()
+    const [fullName, setFullName] = useState();
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [errorMessage, setErrorMessage] = useState();
 
 
-    const [step, setStep] = useState(3)
-    let count = 0;
-    const getStep = () => {
-        setStep((count+1))
-        count = step +1;
-        console.log(step);
+    const registerUser = async () => {
+        var user = await fetch(`${BASE_URL}Auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    fullName: fullName,
+                    email: email,
+                    password: password
+                }
+            )
+        }).then(res => res.json())
+        if (user.status == 200) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 1500
+            }).then((c) => {
+                navigate("/")
+            })
+        } else {
+            setErrorMessage(user.message)
+        }
     }
+    useEffect(() => {
+        
+    }, [])
 
-    useEffect(() =>{
 
-    },[step])
     return (
-        <>
-           <div className="container">
-                <button>Geri</button>
-                <button onClick={() => getStep()}>Ireli</button>
+        <div className='container mt-5'>
+            <div className="row">
+                <div className="col-lg-8 m-auto">
+                    {
+                        errorMessage &&
+                        (
+                            <Alert variant="outlined" severity="error">
+                                {errorMessage}
+                            </Alert>
+                        )
+                    }
+
+                    <div className='my-3'>
+                        <TextField fullWidth id="outlined-basic" onChange={(e) => setFullName(e.target.value)} label="Fullname" variant="outlined" />
+                    </div>
+                    <div className='my-3'>
+                        <TextField fullWidth id="outlined-basic" onChange={(e) => setEmail(e.target.value)} label="Email" variant="outlined" />
+                    </div>
+                    <div className='my-3'>
+                        <TextField fullWidth id="outlined-basic" onChange={(e) => setPassword(e.target.value)} type="password" label="Password" variant="outlined" />
+                    </div>
+                    <div className='my-3'>
+                        <button onClick={() => registerUser()} className='btn btn-outline-primary'>
+                            Register
+                        </button>
+                    </div>
+                </div>
             </div>
-            <Stepper activeStep={step} alternativeLabel>
-                <Step>
-                    <StepButton color="inherit">
-                        Email
-                        <StepContent TransitionProps={{ unmountOnExit: false }}>
-                            dasdasd
-                        </StepContent>
-                    </StepButton>
-
-                </Step>
-                <Step>
-                    <StepButton color="inherit">
-                        Fullname
-                        <StepContent TransitionProps={{ unmountOnExit: false }}>
-                            aaaaaa
-                        </StepContent>
-                    </StepButton>
-                </Step>
-                <Step>
-                    <StepButton color="inherit">
-                        Password
-                        <StepContent TransitionProps={{ unmountOnExit: false }}>
-                            wwwwww
-                        </StepContent>
-                    </StepButton>
-                </Step>
-            </Stepper>
-         
-
-
-
-        </>
+        </div>
     )
 }
 
